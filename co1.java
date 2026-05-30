@@ -1,6 +1,4 @@
-// Student Record Management System using BST
 
-// BST Node Class
 class Node {
 
     int studentId;
@@ -18,12 +16,11 @@ class Node {
     }
 }
 
-// BST Class
 class StudentBST {
 
     Node root;
 
-    // Insert Method
+ 
     Node insert(Node root, int studentId,
                 String studentName, String course) {
 
@@ -44,7 +41,7 @@ class StudentBST {
         return root;
     }
 
-    // Search Method
+   
     Node search(Node root, int studentId) {
 
         if (root == null || root.studentId == studentId) {
@@ -70,7 +67,7 @@ class StudentBST {
         return current;
     }
 
-    // Delete Method
+   
     Node delete(Node root, int studentId) {
 
         if (root == null) {
@@ -105,7 +102,7 @@ class StudentBST {
         return root;
     }
 
-    // Inorder Traversal
+   
     void inorder(Node root) {
 
         if (root != null) {
@@ -121,7 +118,6 @@ class StudentBST {
         }
     }
 
-    // Count Students
     int countStudents(Node root) {
 
         if (root == null) {
@@ -160,7 +156,7 @@ public class Main {
         System.out.println("===== STUDENT RECORDS =====");
         bst.inorder(bst.root);
 
-        // Search Student
+       
         int searchId = 205;
 
         Node result = bst.search(bst.root, searchId);
@@ -177,15 +173,14 @@ public class Main {
             System.out.println("\nSTUDENT NOT FOUND");
         }
 
-        // Delete Student
+     
         System.out.println("\nDeleting Student ID 150...");
         bst.root = bst.delete(bst.root, 150);
 
-        // Updated Records
         System.out.println("\n===== UPDATED RECORDS =====");
         bst.inorder(bst.root);
 
-        // Analytics
+        
         int total = bst.countStudents(bst.root);
 
         System.out.println("\nTotal Students : " + total);
