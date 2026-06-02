@@ -1,37 +1,50 @@
-// Student Marks Analysis System using Segment Tree
+import java.util.*;
+
+// Water Consumption Analysis using Segment Tree
 
 class SegmentTree {
 
     int[] tree;
     int n;
 
-    SegmentTree(int[] marks) {
+    SegmentTree(int[] waterUsage) {
 
-        n = marks.length;
+        n = waterUsage.length;
         tree = new int[4 * n];
 
-        build(marks, 0, 0, n - 1);
+        build(waterUsage, 0, 0, n - 1);
     }
 
-    void build(int[] arr, int node, int start, int end) {
+    // Build Segment Tree
+    void build(int[] arr, int node,
+               int start, int end) {
 
         if (start == end) {
+
             tree[node] = arr[start];
+
         } else {
 
             int mid = (start + end) / 2;
 
-            build(arr, 2 * node + 1, start, mid);
-            build(arr, 2 * node + 2, mid + 1, end);
+            build(arr, 2 * node + 1,
+                    start, mid);
+
+            build(arr, 2 * node + 2,
+                    mid + 1, end);
 
             tree[node] =
-                tree[2 * node + 1] +
-                tree[2 * node + 2];
+                    tree[2 * node + 1]
+                    + tree[2 * node + 2];
         }
     }
 
-    int query(int node, int start, int end,
-              int left, int right) {
+    // Range Sum Query
+    int query(int node,
+              int start,
+              int end,
+              int left,
+              int right) {
 
         if (right < start || left > end)
             return 0;
@@ -42,14 +55,24 @@ class SegmentTree {
         int mid = (start + end) / 2;
 
         return query(2 * node + 1,
-                start, mid, left, right)
+                start,
+                mid,
+                left,
+                right)
                 +
                 query(2 * node + 2,
-                mid + 1, end, left, right);
+                        mid + 1,
+                        end,
+                        left,
+                        right);
     }
 
-    void update(int node, int start,
-                int end, int index, int value) {
+    // Update Water Usage
+    void update(int node,
+                int start,
+                int end,
+                int index,
+                int value) {
 
         if (start == end) {
 
@@ -59,70 +82,142 @@ class SegmentTree {
 
             int mid = (start + end) / 2;
 
-            if (index <= mid)
+            if (index <= mid) {
+
                 update(2 * node + 1,
-                        start, mid,
-                        index, value);
-            else
+                        start,
+                        mid,
+                        index,
+                        value);
+
+            } else {
+
                 update(2 * node + 2,
-                        mid + 1, end,
-                        index, value);
+                        mid + 1,
+                        end,
+                        index,
+                        value);
+            }
 
             tree[node] =
-                tree[2 * node + 1] +
-                tree[2 * node + 2];
+                    tree[2 * node + 1]
+                    + tree[2 * node + 2];
         }
     }
 }
 
+// Main Class
 public class Main {
 
     public static void main(String[] args) {
 
-        int[] marks =
-        {85, 90, 78, 92, 88};
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print(
+                "Enter Number of Days: ");
+
+        int n = sc.nextInt();
+
+        int[] waterUsage =
+                new int[n];
+
+        System.out.println(
+                "\nEnter Daily Water Consumption:");
+
+        for (int i = 0; i < n; i++) {
+
+            System.out.print(
+                    "Day " + (i + 1) + ": ");
+
+            waterUsage[i] = sc.nextInt();
+        }
 
         SegmentTree st =
-            new SegmentTree(marks);
+                new SegmentTree(waterUsage);
 
         System.out.println(
-            "===== STUDENT MARKS =====");
+                "\n===== WATER CONSUMPTION RECORDS =====");
 
-        for (int mark : marks)
-            System.out.print(mark + " ");
+        for (int i = 0; i < n; i++) {
 
-        System.out.println();
+            System.out.println(
+                    "Day " + (i + 1)
+                            + " : "
+                            + waterUsage[i]
+                            + " Liters");
+        }
 
-        int total =
-            st.query(0, 0, marks.length - 1,
-                     0, 4);
+        // Range Query
+        System.out.print(
+                "\nEnter Start Day: ");
 
-        System.out.println(
-        "\nTotal Marks (Student 1-5) : "
-        + total);
+        int startDay = sc.nextInt();
 
-        int range =
-            st.query(0, 0, marks.length - 1,
-                     1, 3);
+        System.out.print(
+                "Enter End Day: ");
 
-        System.out.println(
-        "Marks from Student 2-4 : "
-        + range);
+        int endDay = sc.nextInt();
 
-        System.out.println(
-        "\nUpdating Student 3 Marks to 95...");
-
-        st.update(0, 0,
-                marks.length - 1,
-                2, 95);
-
-        int updated =
-            st.query(0, 0,
-                    marks.length - 1,
-                    0, 4);
+        int totalUsage =
+                st.query(0,
+                        0,
+                        n - 1,
+                        startDay - 1,
+                        endDay - 1);
 
         System.out.println(
-        "Updated Total Marks : "
-        + updated);
+                "\nTotal Water Consumption from Day "
+                        + startDay
+                        + " to Day "
+                        + endDay
+                        + " = "
+                        + totalUsage
+                        + " Liters");
+
+        // Update
+        System.out.print(
+                "\nEnter Day to Update: ");
+
+        int updateDay = sc.nextInt();
+
+        System.out.print(
+                "Enter New Water Consumption: ");
+
+        int newUsage = sc.nextInt();
+
+        st.update(0,
+                0,
+                n - 1,
+                updateDay - 1,
+                newUsage);
+
+        waterUsage[updateDay - 1] =
+                newUsage;
+
+        System.out.println(
+                "\nUPDATED WATER RECORDS");
+
+        for (int i = 0; i < n; i++) {
+
+            System.out.println(
+                    "Day " + (i + 1)
+                            + " : "
+                            + waterUsage[i]
+                            + " Liters");
+        }
+
+        int updatedTotal =
+                st.query(0,
+                        0,
+                        n - 1,
+                        0,
+                        n - 1);
+
+        System.out.println(
+                "\nTotal Water Consumption = "
+                        + updatedTotal
+                        + " Liters");
+
+        sc.close();
     }
 }
