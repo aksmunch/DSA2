@@ -1,85 +1,95 @@
+import java.util.*;
 
+// Water Consumer Record Management using BST
+
+// BST Node Class
 class Node {
 
-    int studentId;
-    String studentName;
-    String course;
+    int consumerId;
+    String consumerName;
+    int waterUsage;
 
     Node left, right;
 
-    public Node(int studentId, String studentName, String course) {
-        this.studentId = studentId;
-        this.studentName = studentName;
-        this.course = course;
+    public Node(int consumerId, String consumerName, int waterUsage) {
+
+        this.consumerId = consumerId;
+        this.consumerName = consumerName;
+        this.waterUsage = waterUsage;
 
         left = right = null;
     }
 }
 
-class StudentBST {
+// BST Class
+class WaterBST {
 
     Node root;
 
- 
-    Node insert(Node root, int studentId,
-                String studentName, String course) {
+    // Insert Method
+    Node insert(Node root, int consumerId,
+                String consumerName, int waterUsage) {
 
         if (root == null) {
-            return new Node(studentId, studentName, course);
+            return new Node(consumerId, consumerName, waterUsage);
         }
 
-        if (studentId < root.studentId) {
-            root.left = insert(root.left, studentId,
-                    studentName, course);
+        if (consumerId < root.consumerId) {
+
+            root.left = insert(root.left,
+                    consumerId,
+                    consumerName,
+                    waterUsage);
         }
 
-        else if (studentId > root.studentId) {
-            root.right = insert(root.right, studentId,
-                    studentName, course);
+        else if (consumerId > root.consumerId) {
+
+            root.right = insert(root.right,
+                    consumerId,
+                    consumerName,
+                    waterUsage);
         }
 
         return root;
     }
 
-   
-    Node search(Node root, int studentId) {
+    // Search Method
+    Node search(Node root, int consumerId) {
 
-        if (root == null || root.studentId == studentId) {
+        if (root == null || root.consumerId == consumerId)
             return root;
-        }
 
-        if (studentId < root.studentId) {
-            return search(root.left, studentId);
-        }
+        if (consumerId < root.consumerId)
+            return search(root.left, consumerId);
 
-        return search(root.right, studentId);
+        return search(root.right, consumerId);
     }
 
-    // Find Minimum
+    // Minimum Node
     Node minValue(Node root) {
 
         Node current = root;
 
-        while (current.left != null) {
+        while (current.left != null)
             current = current.left;
-        }
 
         return current;
     }
 
-   
-    Node delete(Node root, int studentId) {
+    // Delete Method
+    Node delete(Node root, int consumerId) {
 
-        if (root == null) {
+        if (root == null)
             return root;
+
+        if (consumerId < root.consumerId) {
+
+            root.left = delete(root.left, consumerId);
         }
 
-        if (studentId < root.studentId) {
-            root.left = delete(root.left, studentId);
-        }
+        else if (consumerId > root.consumerId) {
 
-        else if (studentId > root.studentId) {
-            root.right = delete(root.right, studentId);
+            root.right = delete(root.right, consumerId);
         }
 
         else {
@@ -92,40 +102,47 @@ class StudentBST {
 
             Node temp = minValue(root.right);
 
-            root.studentId = temp.studentId;
-            root.studentName = temp.studentName;
-            root.course = temp.course;
+            root.consumerId = temp.consumerId;
+            root.consumerName = temp.consumerName;
+            root.waterUsage = temp.waterUsage;
 
-            root.right = delete(root.right, temp.studentId);
+            root.right = delete(root.right, temp.consumerId);
         }
 
         return root;
     }
 
-   
+    // Inorder Traversal
     void inorder(Node root) {
 
         if (root != null) {
 
             inorder(root.left);
 
-            System.out.println("Student ID   : " + root.studentId);
-            System.out.println("Student Name : " + root.studentName);
-            System.out.println("Course       : " + root.course);
-            System.out.println("----------------------------");
+            System.out.println("Consumer ID   : "
+                    + root.consumerId);
+
+            System.out.println("Consumer Name : "
+                    + root.consumerName);
+
+            System.out.println("Water Usage   : "
+                    + root.waterUsage + " Liters");
+
+            System.out.println("--------------------------");
 
             inorder(root.right);
         }
     }
 
-    int countStudents(Node root) {
+    // Count Consumers
+    int countConsumers(Node root) {
 
-        if (root == null) {
+        if (root == null)
             return 0;
-        }
 
-        return 1 + countStudents(root.left)
-                 + countStudents(root.right);
+        return 1 +
+                countConsumers(root.left) +
+                countConsumers(root.right);
     }
 }
 
@@ -134,55 +151,91 @@ public class Main {
 
     public static void main(String[] args) {
 
-        StudentBST bst = new StudentBST();
+        Scanner sc = new Scanner(System.in);
 
-        // Insert Student Records
-        bst.root = bst.insert(bst.root,
-                101, "Akash", "CSE");
+        WaterBST bst = new WaterBST();
 
-        bst.root = bst.insert(bst.root,
-                205, "Rahul", "AI&DS");
+        System.out.print("Enter Number of Consumers: ");
+        int n = sc.nextInt();
 
-        bst.root = bst.insert(bst.root,
-                150, "Priya", "IT");
+        for (int i = 0; i < n; i++) {
 
-        bst.root = bst.insert(bst.root,
-                250, "Neha", "ECE");
+            System.out.println("\nConsumer " + (i + 1));
 
-        bst.root = bst.insert(bst.root,
-                175, "Kiran", "CSE");
+            System.out.print("Enter Consumer ID: ");
+            int id = sc.nextInt();
+            sc.nextLine();
 
-        // Display Records
-        System.out.println("===== STUDENT RECORDS =====");
+            System.out.print("Enter Consumer Name: ");
+            String name = sc.nextLine();
+
+            System.out.print("Enter Water Usage (Liters): ");
+            int usage = sc.nextInt();
+
+            bst.root = bst.insert(
+                    bst.root,
+                    id,
+                    name,
+                    usage);
+        }
+
+        System.out.println(
+                "\n===== WATER CONSUMER RECORDS =====");
+
         bst.inorder(bst.root);
 
-       
-        int searchId = 205;
+        // Search
+        System.out.print(
+                "\nEnter Consumer ID to Search: ");
 
-        Node result = bst.search(bst.root, searchId);
+        int searchId = sc.nextInt();
+
+        Node result = bst.search(
+                bst.root,
+                searchId);
 
         if (result != null) {
 
-            System.out.println("\nSTUDENT FOUND");
-            System.out.println("Student ID   : " + result.studentId);
-            System.out.println("Student Name : " + result.studentName);
-            System.out.println("Course       : " + result.course);
+            System.out.println("\nCONSUMER FOUND");
 
-        } else {
+            System.out.println(
+                    "Name : "
+                            + result.consumerName);
 
-            System.out.println("\nSTUDENT NOT FOUND");
+            System.out.println(
+                    "Usage : "
+                            + result.waterUsage
+                            + " Liters");
         }
 
-     
-        System.out.println("\nDeleting Student ID 150...");
-        bst.root = bst.delete(bst.root, 150);
+        else {
 
-        System.out.println("\n===== UPDATED RECORDS =====");
+            System.out.println(
+                    "\nCONSUMER NOT FOUND");
+        }
+
+        // Delete
+        System.out.print(
+                "\nEnter Consumer ID to Delete: ");
+
+        int deleteId = sc.nextInt();
+
+        bst.root = bst.delete(
+                bst.root,
+                deleteId);
+
+        System.out.println(
+                "\n===== UPDATED RECORDS =====");
+
         bst.inorder(bst.root);
 
-        
-        int total = bst.countStudents(bst.root);
+        int total =
+                bst.countConsumers(bst.root);
 
-        System.out.println("\nTotal Students : " + total);
+        System.out.println(
+                "\nTotal Active Consumers : "
+                        + total);
+
+        sc.close();
     }
 }
