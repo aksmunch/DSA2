@@ -1,6 +1,6 @@
 import java.util.*;
 
-// College Social Network Analysis using BFS and DFS
+// Water Pipeline Network Monitoring using BFS & DFS
 
 class Graph {
 
@@ -10,16 +10,16 @@ class Graph {
         adjList = new HashMap<>();
     }
 
-    // Add Student
-    void addStudent(String student) {
-        adjList.putIfAbsent(student, new ArrayList<>());
+    // Add Water Tank
+    void addTank(String tank) {
+        adjList.putIfAbsent(tank, new ArrayList<>());
     }
 
-    // Add Friendship
-    void addFriendship(String s1, String s2) {
+    // Add Pipeline Connection
+    void addPipeline(String tank1, String tank2) {
 
-        adjList.get(s1).add(s2);
-        adjList.get(s2).add(s1);
+        adjList.get(tank1).add(tank2);
+        adjList.get(tank2).add(tank1);
     }
 
     // BFS Traversal
@@ -31,39 +31,41 @@ class Graph {
         visited.add(start);
         queue.add(start);
 
-        System.out.println("\n===== BFS TRAVERSAL =====");
+        System.out.println("\n===== BFS WATER FLOW ANALYSIS =====");
 
         while (!queue.isEmpty()) {
 
-            String student = queue.poll();
+            String tank = queue.poll();
 
-            System.out.println(student);
+            System.out.println(tank);
 
-            for (String friend : adjList.get(student)) {
+            for (String neighbor : adjList.get(tank)) {
 
-                if (!visited.contains(friend)) {
+                if (!visited.contains(neighbor)) {
 
-                    visited.add(friend);
-                    queue.add(friend);
+                    visited.add(neighbor);
+                    queue.add(neighbor);
                 }
             }
         }
 
-        System.out.println("\nTotal Connected Students : "
-                + visited.size());
+        System.out.println(
+                "\nTotal Connected Tanks : "
+                        + visited.size());
     }
 
     // DFS Traversal
-    void dfs(String student, Set<String> visited) {
+    void dfs(String tank, Set<String> visited) {
 
-        visited.add(student);
+        visited.add(tank);
 
-        System.out.println(student);
+        System.out.println(tank);
 
-        for (String friend : adjList.get(student)) {
+        for (String neighbor : adjList.get(tank)) {
 
-            if (!visited.contains(friend)) {
-                dfs(friend, visited);
+            if (!visited.contains(neighbor)) {
+
+                dfs(neighbor, visited);
             }
         }
     }
@@ -78,47 +80,62 @@ public class Main {
 
         Graph g = new Graph();
 
-        System.out.print("Enter Number of Students: ");
+        System.out.print(
+                "Enter Number of Water Tanks: ");
+
         int n = sc.nextInt();
         sc.nextLine();
 
-        // Add Students
+        // Add Tanks
         for (int i = 0; i < n; i++) {
 
-            System.out.print("Enter Student Name: ");
-            String name = sc.nextLine();
+            System.out.print(
+                    "Enter Tank Name: ");
 
-            g.addStudent(name);
+            String tank = sc.nextLine();
+
+            g.addTank(tank);
         }
 
-        // Add Friendships
-        System.out.print("\nEnter Number of Friendships: ");
+        // Add Pipelines
+        System.out.print(
+                "\nEnter Number of Pipeline Connections: ");
+
         int m = sc.nextInt();
         sc.nextLine();
 
         for (int i = 0; i < m; i++) {
 
-            System.out.print("Enter Friend 1: ");
-            String s1 = sc.nextLine();
+            System.out.print(
+                    "Enter Source Tank: ");
 
-            System.out.print("Enter Friend 2: ");
-            String s2 = sc.nextLine();
+            String tank1 = sc.nextLine();
 
-            g.addFriendship(s1, s2);
+            System.out.print(
+                    "Enter Connected Tank: ");
+
+            String tank2 = sc.nextLine();
+
+            g.addPipeline(tank1, tank2);
         }
 
-        // Starting Student
-        System.out.print("\nEnter Starting Student: ");
-        String start = sc.nextLine();
+        // Starting Tank
+        System.out.print(
+                "\nEnter Starting Tank: ");
+
+        String startTank = sc.nextLine();
 
         // BFS
-        g.bfs(start);
+        g.bfs(startTank);
 
         // DFS
-        System.out.println("\n===== DFS TRAVERSAL =====");
+        System.out.println(
+                "\n===== DFS PIPELINE INSPECTION =====");
 
-        Set<String> visited = new HashSet<>();
-        g.dfs(start, visited);
+        Set<String> visited =
+                new HashSet<>();
+
+        g.dfs(startTank, visited);
 
         sc.close();
     }
